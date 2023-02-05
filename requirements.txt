@@ -3,3 +3,4 @@ gunicorn
 docker
 pandas
 numpy
+-e .
