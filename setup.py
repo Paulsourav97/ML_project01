@@ -14,7 +14,7 @@ def get_requirements_list() -> List[str]:
     """
 
     with open(REQUIREMENTS_FILE_NAME) as requirement_file:
-        return requirement_file.readlines().remove("-e")
+        return requirement_file.readlines().remove("-e .")
 
         
 
@@ -22,7 +22,7 @@ def get_requirements_list() -> List[str]:
 
 setup(
 name="Housing-predictor",
-version="0.0.2",
+version="0.0.3",
 author="Sourav",
 description="This is first end to end ML project",
 packages=find_packages(), # ["housing"]
