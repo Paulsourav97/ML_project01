@@ -6,12 +6,13 @@ from housing.entity.artifact_entity import DataIngestionArtifact
 import tarfile
 from six.moves import urllib
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
 
 
 
 class DataIngestion:
-
+    
     def __init__(self, data_ingestion_config:DataIngestionConfig):
         try:
             logging.info(f"{'='*20}Data Ingestion log started.{'='*20}")
@@ -31,7 +32,7 @@ class DataIngestion:
                 os.remove(tgz_download_dir)
             
             #to check if the file already exist if not create
-            os.makedirs(tgz_file_path, exist_ok=True)
+            os.makedirs(tgz_download_dir, exist_ok=True)
 
             #THis will give the file name
             housing_file_name =os.path.basename(download_url)
@@ -76,7 +77,7 @@ class DataIngestion:
             logging.info(f"Reading csv file: [{housing_file_path}]")
             
             housing_data_frame = pd.read_csv(housing_file_path)
-            housing_data_frame["income_category"]=pd.cut(housing_data_frame["meadian_income"], 
+            housing_data_frame["income_cat"]=pd.cut(housing_data_frame["median_income"], 
                         bins=[0,1.5,3.0,4.5,6.0, np.inf], labels =[1,2,3,4,5]
                         )
             
@@ -86,7 +87,7 @@ class DataIngestion:
 
             split = StratifiedShuffleSplit(n_splits=1, test_size=0.2 , random_state=42)
 
-            for train_index, test_index in split.split(housing_data_frame, housing_data_frame["income_category"]):
+            for train_index, test_index in split.split(housing_data_frame, housing_data_frame["income_cat"]):
                 strat_train_set = housing_data_frame.loc[train_index].drop(["income_cat"], axis = 1)
                 strat_test_set = housing_data_frame.loc[test_index].drop(["income_cat"], axis = 1)
 
