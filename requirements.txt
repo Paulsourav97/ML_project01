@@ -3,4 +3,7 @@ gunicorn
 docker
 pandas
 numpy
+PyYAML
+sklearn
+evidently
 -e .
