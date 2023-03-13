@@ -30,7 +30,7 @@ class DataValidation:
             raise HousingException(e, sys) from e
 
         
-    def is_train_test_file_exists(self):
+    def is_train_test_file_exists(self)->bool:
         try:
             logging.info("Checking if training and testfile is available")
             is_train_file_exist = False
@@ -86,7 +86,11 @@ class DataValidation:
             profile.calculate(train_df, test_df)
             report = json.loads(profile.json())
 
-            with open(self.data_validation_config.report_file_path,"w") as report_file:
+            report_file_path = self.data_validation_config.report_file_path
+
+            report_dir = os.path.dirname(report_file_path)
+            os.makedirs(report_dir, exist_ok=True)
+            with open(report_file_path,"w") as report_file:
                 json.dump(report, report_file, indent=6)
             return report
 
@@ -98,7 +102,12 @@ class DataValidation:
             dashboard = Dashboard(tabs=[DataDriftTab()])
             train_df, test_df = self.get_train_and_test_df()
             dashboard.calculate(train_df, test_df)
-            dashboard.save(self.data_validation_config.report_page_file_path)
+
+            report_page_file_path = self.data_validation_config.report_page_file_path
+
+            report_page_dir = os.path.dirname(report_page_file_path)
+            os.makedirs(report_page_dir, exist_ok=True)
+            dashboard.save(report_page_file_path)
 
         except Exception as e:
             raise HousingException(e, sys) from e
