@@ -44,8 +44,9 @@ class DataValidation:
             
             is_available =  is_test_file_exist and is_train_file_exist
             logging.info(f"Is train and test file exist ? -> {is_available}")
+        
 
-            if not is_available:
+            if  is_available == False:
                 training_file = self.data_ingestion_artifact.train_file_path
                 testing_file = self.data_ingestion_artifact.test_file_path
                 message = f"Training file: {training_file} or Testing file: {testing_file} is not available"
@@ -97,7 +98,7 @@ class DataValidation:
         except Exception as e:
             raise HousingException(e, sys) from e
 
-    def save_data_drft_report_page(self)->bool:
+    def save_data_drft_report_page(self):
         try:
             dashboard = Dashboard(tabs=[DataDriftTab()])
             train_df, test_df = self.get_train_and_test_df()
@@ -116,7 +117,6 @@ class DataValidation:
         try:
             report = self.get_and_save_data_drift_report()
             self.save_data_drft_report_page()
-            
             return True
         except Exception as e:
             raise HousingException(e, sys) from e
@@ -134,7 +134,7 @@ class DataValidation:
                                                               message="Data Validation perfoemed Succesfully")
             
             logging.info(f"Data Validation Artifact: {data_validation_artifact}")
-
+            return data_validation_artifact
 
 
         except Exception as e:
